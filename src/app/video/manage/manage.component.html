@@ -5,15 +5,15 @@
       
       <!-- Sort Videos -->
       <select class="text-black px-8 text-xl outline-none appearance-none" (change)="sort($event)">
-        <option value="1">Recent Uploads</option>
-        <option value="2">Oldest Uploads</option>
+        <option value="1" [selected]="videoOrder === '1'">Recent Uploads</option>
+        <option value="2" [selected]="videoOrder === '2'">Oldest Uploads</option>
       </select>
-      <h1 *ngIf="videoOrder=='1'">
+      <!-- <h1 *ngIf="videoOrder=='1'">
         hello videoOrder 1
       </h1>
       <h1 *ngIf="videoOrder=='2'">
         hello videoOrder 2
-      </h1>
+      </h1> -->
     </div>
   </section>
 

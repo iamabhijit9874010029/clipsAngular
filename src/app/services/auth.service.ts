@@ -14,7 +14,7 @@ export class AuthService {
   public isAuthenticated$: Observable<boolean>;
   public isAuthenticatedWithDelay$: Observable<boolean>;
   public redirect: boolean = false;
-
+  public authchekForRoute: boolean = false;
 
   constructor(private auth: AngularFireAuth, private db: AngularFirestore, private router: Router, private route: ActivatedRoute) {
     this.usersCollection = db.collection('users');
@@ -24,14 +24,15 @@ export class AuthService {
 
     this.isAuthenticatedWithDelay$ = this.isAuthenticated$.pipe(
       delay(1000),
-      // tap({
-      //   next: (isAuthenticated) => {
-      //     console.log(`User is authenticated: ${isAuthenticated}`);
-      //   },
-      //   complete() {
-      //     console.log('Authentication check completed!')
-      //   },
-      // })
+      tap({
+        next: (isAuthenticated) => {
+          console.log(`User is authenticated: ${isAuthenticated}`);
+          this.authchekForRoute = isAuthenticated;
+        },
+        complete() {
+          console.log('Authentication check completed!')
+        },
+      })
     )
 
     this.router.events.pipe(
