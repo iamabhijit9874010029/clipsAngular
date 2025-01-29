@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ManageComponent } from './manage/manage.component';
 import { UploadComponent } from './upload/upload.component';
 import {AngularFireAuthGuard, redirectUnauthorizedTo} from '@angular/fire/compat/auth-guard';
-import { AuthguardService } from '../services/authguard.service';
+// import { AuthguardService } from '../services/authguard.service'; //when use custom authgurad service
 
 const redirectUnauthorizedToHome = () => redirectUnauthorizedTo(['/']);
 
@@ -15,7 +15,8 @@ const routes: Routes = [
       authOnly: true,
       authGuardPipe: redirectUnauthorizedToHome
     },
-    canActivate: [AuthguardService]
+    // canActivate: [AuthguardService] //when use custom authgurad service
+    canActivate: [AngularFireAuthGuard],
   },
   {
     path: "upload",
@@ -24,7 +25,8 @@ const routes: Routes = [
       authOnly: true,
       authGuardPipe: redirectUnauthorizedToHome
     },
-    canActivate: [AuthguardService]
+    // canActivate: [AuthguardService] //when use custom authgurad service
+    canActivate: [AngularFireAuthGuard],
   },
   {
     path: "manage-clips",
