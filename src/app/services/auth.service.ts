@@ -14,7 +14,7 @@ export class AuthService {
   public isAuthenticated$: Observable<boolean>;
   public isAuthenticatedWithDelay$: Observable<boolean>;
   public redirect: boolean = false;
-  public authchekForRoute: boolean = false; //when use custom authgurad service
+  // public authchekForRoute: boolean = false; //when use custom authgurad service (functional and class based canActive)
 
   constructor(private auth: AngularFireAuth, private db: AngularFirestore, private router: Router, private route: ActivatedRoute) {
     this.usersCollection = db.collection('users');
