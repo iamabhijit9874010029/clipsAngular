@@ -6,7 +6,7 @@ import {AngularFireAuthGuard, redirectUnauthorizedTo} from '@angular/fire/compat
 // import { authGuard } from '../guards/auth.guard'; //when use custom authgurad service (functional - new)
 import { AuthguardService } from '../services/authguard.service'; //when use custom authgurad service (class based - deprecated)
 
-const redirectUnauthorizedToHome = () => redirectUnauthorizedTo(['/']);
+// const redirectUnauthorizedToHome = () => redirectUnauthorizedTo(['/']);
 
 const routes: Routes = [
   {
