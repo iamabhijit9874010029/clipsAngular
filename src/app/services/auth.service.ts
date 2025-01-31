@@ -26,7 +26,7 @@ export class AuthService {
       delay(1000),
       tap({
         next: (isAuthenticated) => {
-          console.log(`User is authenticated: ${isAuthenticated}`);
+          console.log(`User is authenticated authservice: ${isAuthenticated}`);
           this.authchekForRoute = isAuthenticated; //when use custom authgurad service
         },
         complete() {
