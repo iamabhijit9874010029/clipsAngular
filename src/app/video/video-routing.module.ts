@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ManageComponent } from './manage/manage.component';
 import { UploadComponent } from './upload/upload.component';
 import {AngularFireAuthGuard, redirectUnauthorizedTo} from '@angular/fire/compat/auth-guard';
-// import { authGuard } from '../guards/auth.guard'; //when use custom authgurad service (functional - new)
-import { AuthguardService } from '../services/authguard.service'; //when use custom authgurad service (class based - deprecated)
+import { authGuard } from '../guards/auth.guard'; //when use custom authgurad service (functional - new)
+// import { AuthguardService } from '../services/authguard.service'; //when use custom authgurad service (class based - deprecated)
 
 // const redirectUnauthorizedToHome = () => redirectUnauthorizedTo(['/']);
 
@@ -16,8 +16,8 @@ const routes: Routes = [
       authOnly: true,
       // authGuardPipe: redirectUnauthorizedToHome
     },
-    canActivate: [AuthguardService] //when use custom authgurad service (class based - deprecated)
-    // canActivate: [authGuard] //when use custom authgurad service (functional - new)
+    // canActivate: [AuthguardService] //when use custom authgurad service (class based - deprecated)
+    canActivate: [authGuard] //when use custom authgurad service (functional - new)
     // canActivate: [AngularFireAuthGuard],
   },
   {
@@ -27,8 +27,8 @@ const routes: Routes = [
       authOnly: true,
       // authGuardPipe: redirectUnauthorizedToHome
     },
-    canActivate: [AuthguardService] //when use custom authgurad service (class based - deprecated)
-    // canActivate: [authGuard] //when use custom authgurad service (functional - new) 
+    // canActivate: [AuthguardService] //when use custom authgurad service (class based - deprecated)
+    canActivate: [authGuard] //when use custom authgurad service (functional - new) 
     // canActivate: [AngularFireAuthGuard],
   },
   {
