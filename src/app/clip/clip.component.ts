@@ -13,5 +13,7 @@ export class ClipComponent {
     route.params.subscribe((params: Params)=>{
       this.id = params['id'];
     })
+
+    // console.log(route.snapshot);
   }
 }

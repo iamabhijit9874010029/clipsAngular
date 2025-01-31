@@ -11,11 +11,11 @@ export class AuthguardService implements CanActivate {
 
   canActivate(): boolean {
     //when use custom authgurad service (class based - deprecated)
-    // if (this.auth.authchekForRoute) {
-    //   console.log('User is authenticated');
-    //   return true;
-    // }
-    // this.router.navigate(['/']);
+    if (this.auth.authchekForRoute) {
+      console.log('User is authenticated');
+      return true;
+    }
+    this.router.navigate(['/']);
     return false;
   }
 }

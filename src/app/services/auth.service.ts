@@ -14,7 +14,7 @@ export class AuthService {
   public isAuthenticated$: Observable<boolean>;
   public isAuthenticatedWithDelay$: Observable<boolean>;
   public redirect: boolean = false;
-  // public authchekForRoute: boolean = false; //when use custom authgurad service (functional and class based canActive)
+  public authchekForRoute: boolean = false; //when use custom authgurad service (functional and class based canActive)
 
   constructor(private auth: AngularFireAuth, private db: AngularFirestore, private router: Router, private route: ActivatedRoute) {
     this.usersCollection = db.collection('users');
@@ -24,15 +24,15 @@ export class AuthService {
 
     this.isAuthenticatedWithDelay$ = this.isAuthenticated$.pipe(
       delay(1000),
-      // tap({
-      //   next: (isAuthenticated) => {
-      //     console.log(`User is authenticated: ${isAuthenticated}`);
-      //     this.authchekForRoute = isAuthenticated; //when use custom authgurad service
-      //   },
-      //   complete() {
-      //     console.log('Authentication check completed!')
-      //   },
-      // })
+      tap({
+        next: (isAuthenticated) => {
+          console.log(`User is authenticated: ${isAuthenticated}`);
+          this.authchekForRoute = isAuthenticated; //when use custom authgurad service
+        },
+        complete() {
+          console.log('Authentication check completed!')
+        },
+      })
     )
 
     this.router.events.pipe(
@@ -41,6 +41,15 @@ export class AuthService {
       map(events => this.route.firstChild),
       switchMap(route => route?.data ?? of({ authOnly: false }))
     ).subscribe(data => this.redirect = data.authOnly);
+    // .subscribe(console.log);
+
+    // this.router.events.pipe(
+    //   //Checks if the events object is of the type NavigationEnd
+    //   filter(events => events instanceof NavigationEnd),
+    //   map(events => this.route.firstChild)
+    // ).subscribe((route)=>{
+    //   route?.data.subscribe(console.log);
+    // });
 
     // this.route.data.subscribe(console.log);
 
