@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-upload',
@@ -8,6 +9,11 @@ import { Component } from '@angular/core';
 export class UploadComponent {
   isDragOver = false;
   file: File | null = null;
+  nextStep = false;
+
+  uploadForm: FormGroup = new FormGroup({
+    title: new FormControl('', Validators.required)
+  });
 
   storeFile($event: Event) {
     this.isDragOver = false;
@@ -17,11 +23,20 @@ export class UploadComponent {
     this.file = ($event as DragEvent).dataTransfer?.files.item(0) ?? null;
 
     if (!this.file || this.file.type !== "video/mp4") {
-      console.log("the MIME type or subtype of the file is : ", this.file?.type);
+      console.log("error - the MIME type or subtype of the file is : ", this.file?.type);
       return;
     }
 
     console.log(this.file);
-    console.log("the MIME type or subtype of the file is : ", this.file.type);
+    console.log("succes - the MIME type or subtype of the file is : ", this.file.type);
+
+    this.nextStep = true;
+    this.uploadForm.patchValue({ title: this.file.name });
+  }
+
+  upload($event: Event) {
+    $event.preventDefault();
+    console.log("uploading...");
+    console.log(this.uploadForm.value);
   }
 }
