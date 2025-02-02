@@ -60,23 +60,23 @@ export class UploadComponent {
   //   console.log(this.uploadForm.value);
   // }
 
-  // uploadFIle() {
-  //   console.log("uploading...");
-  //   const clipFileName = uuid();
-  //   const clipPath = `clips/${clipFileName}`;
-  //   this.storage.upload(clipPath, this.file);
-  //   console.log(this.uploadForm.value);
-  //   console.log("uploaded");
-  // }
-
-  async uploadFIle() {
+  uploadFIle() {
     console.log("uploading...");
     const clipFileName = uuid();
     const clipPath = `clips/${clipFileName}`;
-    await this.storage.upload(clipPath, this.file);
+    this.storage.upload(clipPath, this.file);
     console.log(this.uploadForm.value);
     console.log("uploaded");
   }
+
+  // async uploadFIle() {
+  //   console.log("uploading...");
+  //   const clipFileName = uuid();
+  //   const clipPath = `clips/${clipFileName}`;
+  //   await this.storage.upload(clipPath, this.file);
+  //   console.log(this.uploadForm.value);
+  //   console.log("uploaded");
+  // }
 
   // async uploadFIle() {
   //   if (!this.file) {
