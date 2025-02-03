@@ -11,7 +11,7 @@ import { v4 as uuid } from 'uuid';
 export class UploadComponent {
 
   ShowAlert: boolean = false;
-  alertColor: string = 'green';
+  alertColor: string = 'blue';
   alertMsg: string = 'Please wait! Your clip is being uploaded.';
   inSubmission: boolean = false;
 
@@ -83,8 +83,6 @@ export class UploadComponent {
     await this.storage.upload(clipPath, this.file);
     console.log(this.uploadForm.value);
     console.log("uploaded");
-    this.inSubmission = false;
-    this.ShowAlert = false;
     
   }
 
