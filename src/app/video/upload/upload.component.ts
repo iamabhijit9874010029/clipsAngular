@@ -14,6 +14,7 @@ export class UploadComponent {
   alertColor: string = 'blue';
   alertMsg: string = 'Please wait! Your clip is being uploaded.';
   inSubmission: boolean = false;
+  percentage: number = 0;
 
   constructor(private storage: AngularFireStorage) { }
 
@@ -59,54 +60,24 @@ export class UploadComponent {
     this.title.setValue(this.file.name.replace(/\.[^/.]+$/, ""));
   }
 
-  // upload($event: Event) {
-  //   $event.preventDefault();
-  //   console.log("uploading...");
-  //   console.log(this.uploadForm.value);
-  // }
-
-  // uploadFIle() {
-  //   console.log("uploading...");
-  //   const clipFileName = uuid();
-  //   const clipPath = `clips/${clipFileName}.mp4`;
-  //   this.storage.upload(clipPath, this.file);
-  //   console.log(this.uploadForm.value);
-  //   console.log("uploaded");
-  // }
-
-  async uploadFIle() {
+  uploadFIle() {
     this.inSubmission = true;
     this.ShowAlert = true;
+
     console.log("uploading...");
+
     const clipFileName = uuid();
     const clipPath = `clips/${clipFileName}.mp4`;
-    await this.storage.upload(clipPath, this.file);
-    console.log(this.uploadForm.value);
-    console.log("uploaded");
+    const task = this.storage.upload(clipPath, this.file);
     
+    task.percentageChanges().subscribe((progress) => {
+      this.percentage = progress as number / 100;
+    });
+
+    console.log(this.uploadForm.value ?? null);
+    console.log("uploaded");
+
   }
-
-  // async uploadFIle() {
-  //   if (!this.file) {
-  //     console.error("No file selected for upload.");
-  //     return;
-  //   }
-
-  //   console.log("Uploading...");
-  //   const clipFileName = uuid();
-  //   const clipPath = `clips/${clipFileName}.mp4`;
-
-  //   const uploadTask = this.storage.upload(clipPath, this.file);
-
-  //   try {
-  //     await uploadTask.snapshotChanges().toPromise();
-  //     console.log("Upload successful", this.uploadForm.value);
-  //   } catch (error) {
-  //     console.error("Upload failed", error);
-  //   }
-  // }
-
-
 }
 
 
