@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
+import { last } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 @Component({
@@ -15,6 +16,7 @@ export class UploadComponent {
   alertMsg: string = 'Please wait! Your clip is being uploaded.';
   inSubmission: boolean = false;
   percentage: number = 0;
+  showPercentage: boolean = false;
 
   constructor(private storage: AngularFireStorage) { }
 
@@ -51,7 +53,7 @@ export class UploadComponent {
     }
 
     console.log(this.file);
-    console.log("succes - the MIME type or subtype of the file is : ", this.file.type);
+    console.log("success - the MIME type or subtype of the file is : ", this.file.type);
 
     this.nextStep = true;
     // this.uploadForm.patchValue({ title: this.file.name });
@@ -62,20 +64,43 @@ export class UploadComponent {
 
   uploadFIle() {
     this.inSubmission = true;
+    this.alertMsg = 'Please wait! Your clip is being uploaded.';
     this.ShowAlert = true;
+    this.alertColor = 'blue';
+    this.showPercentage = true;
 
     console.log("uploading...");
 
     const clipFileName = uuid();
     const clipPath = `clips/${clipFileName}.mp4`;
     const task = this.storage.upload(clipPath, this.file);
-    
+
     task.percentageChanges().subscribe((progress) => {
       this.percentage = progress as number / 100;
     });
 
-    console.log(this.uploadForm.value ?? null);
-    console.log("uploaded");
+    task.snapshotChanges().pipe(
+      last()
+    ).subscribe({
+      next: (snapshot) => {
+        this.alertColor = 'green';
+        this.alertMsg = 'Success! Your clips is now ready to share with the world!';
+        this.showPercentage = false;
+
+        console.log(this.uploadForm.value ?? null);
+        console.log("uploaded");
+      },
+      error: (error) => {
+        this.alertColor = 'red';
+        this.alertMsg = 'Upload failed! Please try again later.';
+        this.inSubmission = true;
+        this.showPercentage = false;
+        console.log(error);
+      }
+    }
+    );
+
+
 
   }
 }
