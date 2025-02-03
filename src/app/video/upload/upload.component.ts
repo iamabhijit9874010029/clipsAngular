@@ -10,6 +10,11 @@ import { v4 as uuid } from 'uuid';
 })
 export class UploadComponent {
 
+  ShowAlert: boolean = false;
+  alertColor: string = 'green';
+  alertMsg: string = 'Please wait! Your clip is being uploaded.';
+  inSubmission: boolean = false;
+
   constructor(private storage: AngularFireStorage) { }
 
   isDragOver = false;
@@ -60,23 +65,28 @@ export class UploadComponent {
   //   console.log(this.uploadForm.value);
   // }
 
-  uploadFIle() {
-    console.log("uploading...");
-    const clipFileName = uuid();
-    const clipPath = `clips/${clipFileName}.mp4`;
-    this.storage.upload(clipPath, this.file);
-    console.log(this.uploadForm.value);
-    console.log("uploaded");
-  }
-
-  // async uploadFIle() {
+  // uploadFIle() {
   //   console.log("uploading...");
   //   const clipFileName = uuid();
   //   const clipPath = `clips/${clipFileName}.mp4`;
-  //   await this.storage.upload(clipPath, this.file);
+  //   this.storage.upload(clipPath, this.file);
   //   console.log(this.uploadForm.value);
   //   console.log("uploaded");
   // }
+
+  async uploadFIle() {
+    this.inSubmission = true;
+    this.ShowAlert = true;
+    console.log("uploading...");
+    const clipFileName = uuid();
+    const clipPath = `clips/${clipFileName}.mp4`;
+    await this.storage.upload(clipPath, this.file);
+    console.log(this.uploadForm.value);
+    console.log("uploaded");
+    this.inSubmission = false;
+    this.ShowAlert = false;
+    
+  }
 
   // async uploadFIle() {
   //   if (!this.file) {
