@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
-import { last } from 'rxjs';
+import { last, of, switchMap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
+import firebase from 'firebase/compat/app';
+import { ClipService } from 'src/app/services/clip.service';
 
 @Component({
   selector: 'app-upload',
@@ -17,8 +20,13 @@ export class UploadComponent {
   inSubmission: boolean = false;
   percentage: number = 0;
   showPercentage: boolean = false;
+  fullSize: number = 0;
+  uploadedSize: number = 0;
+  user: firebase.User | null = null;
 
-  constructor(private storage: AngularFireStorage) { }
+  constructor(private storage: AngularFireStorage, private auth: AngularFireAuth, private clipService: ClipService) {
+    auth.user.subscribe(user => this.user = user);
+  }
 
   isDragOver = false;
   file: File | null = null;
@@ -45,15 +53,16 @@ export class UploadComponent {
 
     // console.log(($event as DragEvent).dataTransfer?.files);
     // this.file = ($event as DragEvent).dataTransfer?.files[0] ?? null;
-    this.file = ($event as DragEvent).dataTransfer?.files.item(0) ?? null;
+    this.file = ($event as DragEvent).dataTransfer ? ($event as DragEvent).dataTransfer?.files.item(0) ?? null :
+      ($event.target as HTMLInputElement).files?.item(0) ?? null;
 
     if (!this.file || this.file.type !== "video/mp4") {
       console.log("error - the MIME type or subtype of the file is : ", this.file?.type);
       return;
     }
 
-    console.log(this.file);
-    console.log("success - the MIME type or subtype of the file is : ", this.file.type);
+    // console.log(this.file);
+    // console.log("success - the MIME type or subtype of the file is : ", this.file.type);
 
     this.nextStep = true;
     // this.uploadForm.patchValue({ title: this.file.name });
@@ -63,6 +72,7 @@ export class UploadComponent {
   }
 
   uploadFIle() {
+    this.uploadForm.disable();
     this.inSubmission = true;
     this.alertMsg = 'Please wait! Your clip is being uploaded.';
     this.ShowAlert = true;
@@ -75,20 +85,35 @@ export class UploadComponent {
     const clipPath = `clips/${clipFileName}.mp4`;
     const task = this.storage.upload(clipPath, this.file);
 
+    const clipRef = this.storage.ref(clipPath);
+
     task.percentageChanges().subscribe((progress) => {
       this.percentage = progress as number / 100;
     });
 
     task.snapshotChanges().pipe(
-      last()
+      last(),
+      switchMap(() => clipRef.getDownloadURL()),
     ).subscribe({
-      next: (snapshot) => {
+      next: (url) => {
+        const clip = {
+          uid: this.user?.uid as string,
+          displayName: this.user?.displayName as string,
+          title: this.title.value,
+          fileName: `${clipFileName}.mp4`,
+          url
+        }
+
+        this.clipService.createClip(clip);
+
         this.alertColor = 'green';
         this.alertMsg = 'Success! Your clips is now ready to share with the world!';
         this.showPercentage = false;
 
-        console.log(this.uploadForm.value ?? null);
+        // console.log(this.uploadForm.value ?? null);
         console.log("uploaded");
+        // console.log(url);
+        console.log(clip);
       },
       error: (error) => {
         this.alertColor = 'red';
@@ -96,12 +121,20 @@ export class UploadComponent {
         this.inSubmission = true;
         this.showPercentage = false;
         console.log(error);
+        this.uploadForm.enable();
       }
     }
     );
 
-
-
+    // task.snapshotChanges().subscribe({
+    //   next: (snap) => {
+    //     this.fullSize = snap?.totalBytes ?? 0;
+    //     this.uploadedSize = snap?.bytesTransferred ?? 0;
+    //   },
+    //   complete() {
+    //     console.log("uploaded");
+    //   },
+    // });
   }
 }
 
