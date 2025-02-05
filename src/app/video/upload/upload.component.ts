@@ -6,6 +6,7 @@ import { last, of, switchMap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 import firebase from 'firebase/compat/app';
 import { ClipService } from 'src/app/services/clip.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-upload',
@@ -25,7 +26,7 @@ export class UploadComponent implements OnDestroy {
   user: firebase.User | null = null;
   task?: AngularFireUploadTask;
 
-  constructor(private storage: AngularFireStorage, private auth: AngularFireAuth, private clipService: ClipService) {
+  constructor(private storage: AngularFireStorage, private auth: AngularFireAuth, private clipService: ClipService, private roter: Router) {
     auth.user.subscribe(user => this.user = user);
   }
   ngOnDestroy(): void {
@@ -99,7 +100,7 @@ export class UploadComponent implements OnDestroy {
       last(),
       switchMap(() => clipRef.getDownloadURL()),
     ).subscribe({
-      next: (url) => {
+      next: async (url) => {
         const clip = {
           uid: this.user?.uid as string,
           displayName: this.user?.displayName as string,
@@ -108,7 +109,7 @@ export class UploadComponent implements OnDestroy {
           url
         }
 
-        this.clipService.createClip(clip);
+        const clipDocRef = await this.clipService.createClip(clip);
 
         this.alertColor = 'green';
         this.alertMsg = 'Success! Your clips is now ready to share with the world!';
@@ -118,6 +119,10 @@ export class UploadComponent implements OnDestroy {
         console.log("uploaded");
         // console.log(url);
         console.log(clip);
+
+        setTimeout(() => {
+          this.roter.navigate(['clip', clipDocRef.id]);
+        }, 1000)
       },
       error: (error) => {
         this.alertColor = 'red';
