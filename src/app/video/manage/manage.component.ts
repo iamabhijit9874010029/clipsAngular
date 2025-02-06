@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ClipService } from 'src/app/services/clip.service';
 
 @Component({
   selector: 'app-manage',
@@ -10,7 +11,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 export class ManageComponent implements OnInit {
   videoOrder: string = "1";
 
-  constructor(private router: Router, private route: ActivatedRoute) { }
+  constructor(private router: Router, private route: ActivatedRoute, private clipService: ClipService) { }
 
   ngOnInit() {
     //this will keep the state maintained on page refresh
@@ -18,6 +19,7 @@ export class ManageComponent implements OnInit {
       this.videoOrder = params['sort'] === "2" ? params['sort'] : "1";
     });
     // console.log(this.videoOrder);
+    this.clipService.getUserClips().subscribe(console.log);
   }
 
   sort(event: Event) {
