@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference, QuerySnapshot } from '@angular/fire/compat/firestore';
 import IClip from '../models/clip.model';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Observable, of, switchMap } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -34,17 +34,19 @@ export class ClipService {
   // }
 
 
-  getUserClips(): Observable<QuerySnapshot<IClip> | IClip[]> {
+  // getUserClips(): Observable<QuerySnapshot<IClip> | IClip[]> {
+  getUserClips() {
     return this.auth.user.pipe(
       switchMap(user => {
         if (!user) {
-          return of([] as IClip[]);
+          return of([]);
         }
 
         const query = this.clipsCollection.ref.where('uid', '==', user.uid);
 
         return query.get();
-      })
+      }),
+      map(snapshot => (snapshot as QuerySnapshot<IClip>).docs)
     )
   }
 
