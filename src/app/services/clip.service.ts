@@ -51,10 +51,19 @@ export class ClipService {
   }
 
 
+  // async updateClip(id: string, title: string) {
   updateClip(id: string, title: string) {
     this.clipsCollection.doc(id).update({
       title
     })
+
+    // to check whether 'Please wait! Updating clip.' is actually poping up very fast
+    // await new Promise<void>((resolve) => {
+    //   setTimeout(() => {
+    //     this.clipsCollection.doc(id).update({ title });
+    //     resolve();
+    //   }, 5000);
+    // });
   }
 
 }

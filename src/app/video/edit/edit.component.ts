@@ -53,8 +53,11 @@ export class EditComponent implements OnInit, OnDestroy, OnChanges {
     this.alertColor = "blue";
     this.alertMsg = "Please wait! Updating clip.";
     this.inSubmission = true;
+
     try {
-      await this.clipService.updateClip(this.clipID.value, this.title.value)
+      await this.clipService.updateClip(this.clipID.value, this.title.value);
+      // await new Promise(resolve => setTimeout(resolve, 5000));
+      // alert("to check whether 'Please wait! Updating clip.' is actually poping up very fast");
     }
     catch (error) {
       this.alertColor = "red";
