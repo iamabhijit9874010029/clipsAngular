@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import IClip from 'src/app/models/clip.model';
 import { ClipService } from 'src/app/services/clip.service';
@@ -19,6 +19,7 @@ export class EditComponent implements OnInit, OnDestroy, OnChanges {
   constructor(private modal: ModalService, private clipService: ClipService) { }
 
   @Input() activeClip: IClip | null = null;
+  @Output() update = new EventEmitter();
 
   clipID: FormControl = new FormControl("", { nonNullable: true });
   title: FormControl = new FormControl("", {
@@ -44,11 +45,16 @@ export class EditComponent implements OnInit, OnDestroy, OnChanges {
       return;
     }
 
+    // this.inSubmission = false;
+    this.ShowAlert = false
     this.clipID.setValue(this.activeClip.docID);
     this.title.setValue(this.activeClip.title);
   }
 
   async submit() {
+    if (!this.activeClip) {
+      return
+    }
     this.ShowAlert = true;
     this.alertColor = "blue";
     this.alertMsg = "Please wait! Updating clip.";
@@ -69,5 +75,8 @@ export class EditComponent implements OnInit, OnDestroy, OnChanges {
     this.alertColor = "green";
     this.alertMsg = "Success!";
     this.inSubmission = false;
+
+    this.activeClip.title = this.title.value;
+    this.update.emit(this.activeClip);
   }
 }
