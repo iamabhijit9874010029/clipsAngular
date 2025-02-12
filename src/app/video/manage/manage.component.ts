@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import IClip from 'src/app/models/clip.model';
 import { ClipService } from 'src/app/services/clip.service';
@@ -59,6 +60,18 @@ export class ManageComponent implements OnInit {
     this.clips.forEach((element, index) => {
       if (element.docID === $event.docID) {
         this.clips[index].title = $event.title;
+      }
+    });
+  }
+
+  delete($event: Event, clip: IClip) {
+    $event.preventDefault();
+
+    this.clipService.deleteClip(clip);
+
+    this.clips.forEach((element, index) => {
+      if (element.docID === clip.docID) {
+        this.clips.splice(index, 1);
       }
     });
   }
