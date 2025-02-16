@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import IClip from 'src/app/models/clip.model';
 import { ClipService } from 'src/app/services/clip.service';
 import { ModalService } from 'src/app/services/modal.service';
@@ -15,16 +16,20 @@ export class ManageComponent implements OnInit {
   videoOrder: string = "1";
   clips: IClip[] = [];
   activeClip: IClip | null = null;
+  sort$: BehaviorSubject<string>;
 
-  constructor(private router: Router, private route: ActivatedRoute, private clipService: ClipService, private modal: ModalService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private clipService: ClipService, private modal: ModalService) {
+    this.sort$ = new BehaviorSubject<string>(this.videoOrder);
+  }
 
   ngOnInit() {
     //this will keep the state maintained on page refresh
     this.route.queryParams.subscribe((params: Params) => {
       this.videoOrder = params['sort'] === "2" ? params['sort'] : "1";
+      this.sort$.next(this.videoOrder);
     });
     // console.log(this.videoOrder);
-    this.clipService.getUserClips().subscribe(
+    this.clipService.getUserClips(this.sort$).subscribe(
       doc => {
         this.clips = [];
 
