@@ -26,7 +26,17 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "input": "node_modules/@ffmpeg/core/dist/esm",
+                "output": "node_modules/@ffmpeg/core/dist/esm",
+                "glob": "*"
+              },
+              {
+                "input": "node_modules/@ffmpeg/core/dist/umd",
+                "output": "node_modules/@ffmpeg/core/dist/umd",
+                "glob": "*"
+              }
             ],
             "styles": [
               "src/styles.css"
