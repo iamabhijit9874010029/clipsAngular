@@ -56,7 +56,7 @@ export class UploadComponent implements OnDestroy {
     title: this.title
   });
 
-  storeFile($event: Event) {
+  async storeFile($event: Event) {
     this.isDragOver = false;
 
     // console.log(($event as DragEvent).dataTransfer?.files);
@@ -71,6 +71,8 @@ export class UploadComponent implements OnDestroy {
 
     // console.log(this.file);
     // console.log("success - the MIME type or subtype of the file is : ", this.file.type);
+
+    await this.ffmpegService.getScreenShot(this.file);
 
     this.nextStep = true;
     // this.uploadForm.patchValue({ title: this.file.name });

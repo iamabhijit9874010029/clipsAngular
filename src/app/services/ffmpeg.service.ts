@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { createFFmpeg } from '@ffmpeg/ffmpeg';
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,14 @@ export class FfmpegService {
 
   async init() {
     if (this.isReady) return;
-    
+
     await this.ffmpeg.load();
     this.isReady = true;
+  }
+
+  async getScreenShot(file: File) {
+    const data = await fetchFile(file);
+
+    this.ffmpeg.FS('writeFile', file.name, data);
   }
 }
