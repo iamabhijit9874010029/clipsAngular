@@ -27,6 +27,7 @@ export class UploadComponent implements OnDestroy {
   user: firebase.User | null = null;
   task?: AngularFireUploadTask;
   screenshots: string[] = [];
+  selectedScreenshot: string = '';
 
   constructor(private storage: AngularFireStorage, private auth: AngularFireAuth, private clipService: ClipService, private roter: Router,
     public ffmpegService: FfmpegService) {
@@ -77,6 +78,7 @@ export class UploadComponent implements OnDestroy {
     // console.log("success - the MIME type or subtype of the file is : ", this.file.type);
 
     this.screenshots = await this.ffmpegService.getScreenShot(this.file);
+    this.selectedScreenshot = this.screenshots[0];
 
     this.nextStep = true;
     // this.uploadForm.patchValue({ title: this.file.name });
