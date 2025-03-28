@@ -28,6 +28,7 @@ export class UploadComponent implements OnDestroy {
   task?: AngularFireUploadTask;
   screenshots: string[] = [];
   selectedScreenshot: string = '';
+  screenshotTask?: AngularFireUploadTask;
 
   constructor(private storage: AngularFireStorage, private auth: AngularFireAuth, private clipService: ClipService, private roter: Router,
     public ffmpegService: FfmpegService) {
@@ -87,7 +88,7 @@ export class UploadComponent implements OnDestroy {
     this.title.setValue(this.file.name.replace(/\.[^/.]+$/, ""));
   }
 
-  uploadFIle() {
+  async uploadFIle() {
     this.uploadForm.disable();
     this.inSubmission = true;
     this.alertMsg = 'Please wait! Your clip is being uploaded.';
@@ -99,9 +100,14 @@ export class UploadComponent implements OnDestroy {
 
     const clipFileName = uuid();
     const clipPath = `clips/${clipFileName}.mp4`;
-    this.task = this.storage.upload(clipPath, this.file);
 
+    const screenshotBlob = await this.ffmpegService.blobFromUrl(this.selectedScreenshot);
+    const screenshotPath = `screenshots/${clipFileName}.png`;
+
+    this.task = this.storage.upload(clipPath, this.file);
     const clipRef = this.storage.ref(clipPath);
+
+    this.screenshotTask = this.storage.upload(screenshotPath, screenshotBlob);
 
     this.task.percentageChanges().subscribe((progress) => {
       this.percentage = progress as number / 100;
