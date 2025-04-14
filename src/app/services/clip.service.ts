@@ -96,6 +96,11 @@ export class ClipService {
       const lastDoc = await this.clipsCollection.doc(lastDocID).get().toPromise();
 
       query = query.startAfter(lastDoc);
+
+      // const lastDoc = await this.clipsCollection.doc(lastDocID).get();
+      // const lastDoc2 = await lastValueFrom(lastDoc);
+
+      // query = query.startAfter(lastDoc2);
     }
 
     const snapshot = await query.get();
@@ -109,5 +114,4 @@ export class ClipService {
 
     this.pendingReq = false;
   }
-  
 }
