@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
@@ -8,9 +8,11 @@ import { ActivatedRoute, Params } from '@angular/router';
 })
 export class ClipComponent {
   id = "";
+  @ViewChild("videoPlayer", { static: true }) target?: ElementRef;
+
   constructor(route: ActivatedRoute) {
     // this.id = route.snapshot.params['id'];
-    route.params.subscribe((params: Params)=>{
+    route.params.subscribe((params: Params) => {
       this.id = params['id'];
     })
 
