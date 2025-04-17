@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import videojs from 'video.js';
 // import Player from 'video.js/dist/types/player';
@@ -7,7 +7,8 @@ import videojs from 'video.js';
 @Component({
   selector: 'app-clip',
   templateUrl: './clip.component.html',
-  styleUrl: './clip.component.css'
+  styleUrl: './clip.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class ClipComponent implements OnInit {
   id = "";
