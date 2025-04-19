@@ -90,7 +90,7 @@ export class ManageComponent implements OnInit {
 
     const url = `${location.origin}/clip/${docID}`;
 
-    navigator.clipboard.writeText(url);
+    await navigator.clipboard.writeText(url);
 
     alert("Link copied to clipboard!");
   }
