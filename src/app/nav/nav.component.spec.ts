@@ -4,11 +4,12 @@ import { NavComponent } from './nav.component';
 import { of } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { By } from '@angular/platform-browser';
 
 describe('NavComponent', () => {
   let component: NavComponent;
   let fixture: ComponentFixture<NavComponent>;
-  const mockedAuthService = jasmine.createSpyObj('AuthService', ['createUser', 'logout'], { $isAuthenticated: of(true) });
+  const mockedAuthService = jasmine.createSpyObj('AuthService', ['createUser', 'logout'], { isAuthenticated$: of(true) });
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -24,4 +25,9 @@ describe('NavComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should logout', () => {
+    const lougoutLink = fixture.debugElement.queryAll(By.css('li:nth-child(3) a'));
+    expect(lougoutLink).withContext('Not logged in').toBeTruthy();
+  })
 });
