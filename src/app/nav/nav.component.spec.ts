@@ -13,7 +13,7 @@ describe('NavComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [NavComponent],
-      imports:[RouterTestingModule],
+      imports: [RouterTestingModule],
       providers: [{ provide: AuthService, useValue: mockedAuthService }]
     });
     fixture = TestBed.createComponent(NavComponent);
