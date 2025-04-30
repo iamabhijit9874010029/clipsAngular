@@ -27,7 +27,15 @@ describe('NavComponent', () => {
   });
 
   it('should logout', () => {
-    const lougoutLink = fixture.debugElement.queryAll(By.css('li:nth-child(3) a'));
+    const lougoutLink = fixture.debugElement.query(By.css('li:nth-child(3) a'));
     expect(lougoutLink).withContext('Not logged in').toBeTruthy();
+
+
+    // const liElements = fixture.debugElement.queryAll(By.css('ul li'));
+    // const thirdLi = liElements[2]; // 0-based index
+    // expect(thirdLi.nativeElement.textContent).toContain('Logout');
+
+    // const logoutLink = fixture.debugElement.query(By.css('a[href="#"]'));
+    // expect(logoutLink.nativeElement.textContent).toContain('Logout');
   })
 });
