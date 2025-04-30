@@ -1,5 +1,5 @@
 describe('My First Test', () => {
-  it('Visits the initial project page', () => {
+  it('Sanity test', () => {
     cy.visit('/')
     cy.contains('app is running')
   })
