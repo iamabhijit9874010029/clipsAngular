@@ -37,5 +37,11 @@ describe('NavComponent', () => {
 
     // const logoutLink = fixture.debugElement.query(By.css('a[href="#"]'));
     // expect(logoutLink.nativeElement.textContent).toContain('Logout');
+
+    lougoutLink.triggerEventHandler('click');
+
+    const service = TestBed.inject(AuthService);
+
+    expect(service.logout).withContext('Could not click logout link').toHaveBeenCalledTimes(1);
   })
 });
